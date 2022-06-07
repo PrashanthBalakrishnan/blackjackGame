@@ -1,22 +1,52 @@
-let firstCard = 0;
-let secondCard = 0;
+let cards = []
 let sum = 0;
-let min = 1;
-let max = 11;
-let drawnCards = 0;
 let hasBlacJack = false;
-let isAlive = true;
+let isAlive = false;
 let message = "";
-let drawnCard = 0;
 let gameStatus = document.getElementById("message-el");
 let cardStatus = document.getElementById("card-el");
 let sumStatus = document.getElementById("sum-el");
 
+let player = {
+    name: "Prashanth",
+    chips: 150
+}
 
-function startGame(min, max) {
-    firstCard = Math.floor(Math.random() * (max - min + 1) + min);
-    secondCard = Math.floor(Math.random() * (max - min + 1) + min)
+let playerStatus = document.getElementById("player-el")
+
+playerStatus.textContent = player.name + ": $" + player.chips;
+
+
+function getRandomCard() {
+    let randomNum = Math.floor(Math.random() * 13) + 1;
+
+    if (randomNum > 10) {
+        return 10;
+    } else if (randomNum === 1) {
+        return 11;
+    } else { return randomNum; }
+
+}
+
+function startGame() {
+    isAlive = true;
+    let firstCard = getRandomCard();
+    let secondCard = getRandomCard();
+    cards = [firstCard, secondCard]
     sum = firstCard + secondCard;
+    renderGame();
+}
+
+
+function renderGame() {
+
+    cardStatus.textContent = "Cards : "
+    for (let i = 0; i < cards.length; i++) {
+        cardStatus.textContent += cards[i] + " "
+    }
+
+    sumStatus.textContent = "Sum : " + sum;
+
     if (sum <= 20) {
         message = "Do you want to hit?"
     }
@@ -26,19 +56,21 @@ function startGame(min, max) {
     }
     else {
         message = "its a Bust."
-        isAlive = true;
+        isAlive = false;
     }
-    cardStatus.textContent = "Cards : " + firstCard + " " + secondCard;
-    sumStatus.textContent = "Sum : " + sum;
+
     gameStatus.textContent = message;
 }
 
-function drawCard(min, max) {
-    drawnCard = Math.floor(Math.random() * (max - min + 1) + min)
-    sum += drawnCard;
-    drawnCards += drawnCard;
-    cardStatus.textContent = "Cards : " + firstCard + " " + secondCard + " " + drawnCards;
-    sumStatus.textContent = "Sum : " + sum;
+function drawCard() {
+    if (isAlive == true && hasBlacJack == false) {
+        drawnCards = getRandomCard();
+        cards.push(drawnCards);
+        sum += drawnCards;
+        renderGame()
+    }
+
+
 }
 
 
